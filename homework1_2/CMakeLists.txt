@@ -5,7 +5,7 @@ project(ipFilter LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(ipFilter main.cpp)
+add_executable(ipfilter main.cpp)
 
 set(CPACK_GENERATOR DEB)
 
