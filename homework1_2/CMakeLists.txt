@@ -5,10 +5,6 @@ project(ipfilter LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-target_include_directories(ipfilter
-    PRIVATE "${CMAKE_BINARY_DIR}"
-)
-
 add_executable(ipfilter main.cpp)
 
 set(CPACK_GENERATOR DEB)
