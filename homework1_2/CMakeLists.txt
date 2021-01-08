@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(ipfilter main.cpp)
 
+install(TARGETS ipfilter RUNTIME DESTINATION bin)
+
 set(CPACK_GENERATOR DEB)
 
 set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
