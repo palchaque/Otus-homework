@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 using ip_pool_t = std::vector<std::vector<std::string>>;
 
