@@ -3,8 +3,15 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <algorithm>
 
+using ip_pool_t = std::vector<std::vector<std::string>>;
+
+// ("",  '.') -> [""]
+// ("11", '.') -> ["11"]
+// ("..", '.') -> ["", "", ""]
+// ("11.", '.') -> ["11", ""]
+// (".11", '.') -> ["", "11"]
+// ("11.22", '.') -> ["11", "22"]
 std::vector<std::string> split(const std::string &str, char d)
 {
     std::vector<std::string> r;
@@ -24,14 +31,14 @@ std::vector<std::string> split(const std::string &str, char d)
     return r;
 }
 
-void print_filtered(std::vector<std::vector<std::string>> &ip_pool, const std::string filter1)
+void print_filtered(ip_pool_t &ip_pool, const std::string filter1)
 {
 
-    std::vector<std::vector<std::string>>::const_iterator it = std::find_if(ip_pool.begin(), ip_pool.end(), [filter1](std::vector<std::string> element){ return element[0] == filter1;});
+    auto it = std::find_if(ip_pool.begin(), ip_pool.end(), [filter1](std::vector<std::string> element){ return element[0] == filter1;});
 
     for(it->begin(); it != ip_pool.end(); ++it)
     {
-        for(std::vector<std::string>::const_iterator ip_part = it->cbegin(); ip_part != it->cend(); ++ip_part)
+        for(auto ip_part = it->cbegin(); ip_part != it->cend(); ++ip_part)
         {
             if (ip_part != it->cbegin())
             {
@@ -44,12 +51,12 @@ void print_filtered(std::vector<std::vector<std::string>> &ip_pool, const std::s
     }
 }
 
-void print_filtered(std::vector<std::vector<std::string>> &ip_pool, const std::string filter1, const std::string filter2)
+void print_filtered(ip_pool_t &ip_pool, const std::string filter1, const std::string filter2)
 {
 
-    std::vector<std::vector<std::string>> filteredList;
+    ip_pool_t filteredList;
 
-    for(std::vector<std::vector<std::string> >::const_iterator ip = ip_pool.cbegin(); ip != ip_pool.cend(); ++ip)
+    for(auto ip = ip_pool.cbegin(); ip != ip_pool.cend(); ++ip)
     {
 
             if(ip->at(0) == filter1 && ip->at(1) == filter2)
@@ -59,10 +66,10 @@ void print_filtered(std::vector<std::vector<std::string>> &ip_pool, const std::s
             }
     }
 
-    for(std::vector<std::vector<std::string> >::const_iterator ip = filteredList.cbegin(); ip != filteredList.cend(); ++ip)
+    for(auto ip = filteredList.cbegin(); ip != filteredList.cend(); ++ip)
     {
 
-        for(std::vector<std::string>::const_iterator ip_part = ip->cbegin(); ip_part != ip->cend(); ++ip_part)
+        for(auto ip_part = ip->cbegin(); ip_part != ip->cend(); ++ip_part)
         {
             if (ip_part != ip->cbegin())
             {
@@ -75,14 +82,14 @@ void print_filtered(std::vector<std::vector<std::string>> &ip_pool, const std::s
     }
 }
 
-void print_filtered_any(std::vector<std::vector<std::string>> &ip_pool, const std::string value)
+void print_filtered_any(ip_pool_t &ip_pool, const std::string value)
 {
-    std::vector<std::vector<std::string>> filteredList;
+    ip_pool_t filteredList;
 
-    for(std::vector<std::vector<std::string> >::const_iterator ip = ip_pool.cbegin(); ip != ip_pool.cend(); ++ip)
+    for(auto ip = ip_pool.cbegin(); ip != ip_pool.cend(); ++ip)
     {
         bool haveValue = false;
-        for(std::vector<std::string>::const_iterator ip_part = ip->cbegin(); ip_part != ip->cend(); ++ip_part)
+        for(auto ip_part = ip->cbegin(); ip_part != ip->cend(); ++ip_part)
         {
             if(!haveValue && *ip_part == value)
             {
@@ -92,9 +99,9 @@ void print_filtered_any(std::vector<std::vector<std::string>> &ip_pool, const st
         }
     }
 
-    for(std::vector<std::vector<std::string> >::const_iterator ip = filteredList.cbegin(); ip != filteredList.cend(); ++ip)
+    for(auto ip = filteredList.cbegin(); ip != filteredList.cend(); ++ip)
     {
-        for(std::vector<std::string>::const_iterator ip_part = ip->cbegin(); ip_part != ip->cend(); ++ip_part)
+        for(auto ip_part = ip->cbegin(); ip_part != ip->cend(); ++ip_part)
         {
 
                 if (ip_part != ip->cbegin())
@@ -112,23 +119,10 @@ void print_filtered_any(std::vector<std::vector<std::string>> &ip_pool, const st
 int main(int argc, char const *argv[])
 {
 
-        struct {
-                bool operator()(std::vector<std::string> a, std::vector<std::string> b) const
-                {
-                    for (int i=0; i<=3; i++)
-                    {
-                        if (a[i] != b[i]) return a[i] > b[i];
-                        else continue;
-                    }
-
-                    return false;
-                }
-            } ipv4_sort;
-
         try
         {
 
-        std::vector<std::vector<std::string> > ip_pool;
+        ip_pool_t ip_pool;
 
         for(std::string line; std::getline(std::cin, line);)
         {
@@ -136,11 +130,18 @@ int main(int argc, char const *argv[])
             ip_pool.push_back(split(v.at(0), '.'));
         }
 
-        std::sort(ip_pool.begin(), ip_pool.end(), ipv4_sort);
+        std::sort(ip_pool.begin(), ip_pool.end(), [](std::vector<std::string> a, std::vector<std::string> b){
+            for (int i=0; i<=3; i++)
+            {
+                if (std::stoi(a[i]) != std::stoi(b[i])) return std::stoi(a[i]) > std::stoi(b[i]);
+                else continue;
+            }
+            return false;
+        });
 
-        for(std::vector<std::vector<std::string> >::const_iterator ip = ip_pool.cbegin(); ip != ip_pool.cend(); ++ip)
+        for(auto ip = ip_pool.cbegin(); ip != ip_pool.cend(); ++ip)
         {
-            for(std::vector<std::string>::const_iterator ip_part = ip->cbegin(); ip_part != ip->cend(); ++ip_part)
+            for(auto ip_part = ip->cbegin(); ip_part != ip->cend(); ++ip_part)
             {
                 if (ip_part != ip->cbegin())
                 {
