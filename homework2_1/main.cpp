@@ -106,10 +106,6 @@ int getFactorial(const int &number)
     return factorial;
 }
 
-//#define RUN_BENCHMARK
-
-#ifndef RUN_BENCHMARK
-
 int main()
 {
 
@@ -141,5 +137,3 @@ int main()
     return 0;
 
 }
-#endif
-
