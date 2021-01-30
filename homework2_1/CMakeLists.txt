@@ -1,0 +1,20 @@
+cmake_minimum_required(VERSION 3.5)
+
+project(otus_exc)
+add_executable(${PROJECT_NAME} "main.cpp" "pretty.h")
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_subdirectory(benchmark)
+target_link_libraries(otus_exc benchmark::benchmark)
+
+set(CPACK_GENERATOR DEB)
+
+set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
+
+set(CPACK_PACKAGE_CONTACT example@example.com)
+
+include(CPack)
