@@ -1,4 +1,5 @@
 language: cpp
+compiler: g++
 
 before_script:
 - sudo apt-get install libboost-test-dev -y
