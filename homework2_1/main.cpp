@@ -15,8 +15,7 @@ private:
     uint8_t data[sizeof(T) * max_size];
 
 public:
-    custom_allocator() = default;
-    ~custom_allocator() = default;
+
 
         using value_type = T;
 
@@ -25,6 +24,9 @@ public:
         using reference = T&;
         using const_reference = const T&;
 
+        custom_allocator() = default;
+        ~custom_allocator() = default;
+    
     template<typename U>
        struct rebind {
            using other = custom_allocator<U, max_size>;
