@@ -109,7 +109,7 @@ int getFactorial(const int &number)
 int main()
 {
 
-    auto myMap = std::map<int, int, std::less<int>, custom_allocator<std::pair<int, int>, 10>>{};
+    auto myMap = std::map<int, int, std::less<int>, custom_allocator<std::pair<int, int>, 10>>;
 
     for (int i = 0; i<= 9; i++)
     {
@@ -123,7 +123,7 @@ int main()
 
     custom_allocator<int, 10> alloc;
     
-    custom_list<int, alloc, 10> list{};
+    custom_list<int, alloc, 10> list;
 
     for (int i = 0; i<= 9; i++)
     {
