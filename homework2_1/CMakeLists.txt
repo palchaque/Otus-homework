@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
+add_definitions(-std=gnu++11)
+
 project(custom_allocator)
 add_executable(${PROJECT_NAME} "main.cpp" "pretty.h")
 
