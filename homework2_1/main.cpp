@@ -2,7 +2,6 @@
 #include <string>
 #include <map>
 #include <memory>
-#include <benchmark/benchmark.h>
 
 template<typename T, size_t max_size>
 class custom_allocator
