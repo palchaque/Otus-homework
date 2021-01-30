@@ -121,8 +121,9 @@ int main()
         std::cout<<mapIterator.first<<" "<<mapIterator.second<<std::endl;
     }
 
-
-    custom_list<int, custom_allocator<int, 10>, 10> list{};
+    custom_allocator<int, 10> alloc;
+    
+    custom_list<int, alloc, 10> list{};
 
     for (int i = 0; i<= 9; i++)
     {
