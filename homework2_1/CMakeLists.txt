@@ -1,13 +1,12 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(otus_exc)
+project(custom_allocator)
 add_executable(${PROJECT_NAME} "main.cpp" "pretty.h")
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_subdirectory(benchmark)
-target_link_libraries(otus_exc benchmark::benchmark)
+target_link_libraries(custom_allocator benchmark::benchmark)
 
 set(CPACK_GENERATOR DEB)
 
