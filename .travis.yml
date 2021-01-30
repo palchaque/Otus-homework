@@ -5,7 +5,7 @@ before_script:
 - echo "deb http://archive.ubuntu.com/ubuntu xenial main universe" | sudo tee -a /etc/apt/sources.list
 - sudo apt-get update -qq
 script:
-- cd homework1_2
+- cd homework2_1
 - cmake .
 - cmake --build .
 - cmake --build . --target package
@@ -13,6 +13,6 @@ deploy:
   provider: script
   skip_cleanup: true
   script:
-  - curl -T ipfilter-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -upalchaque:$BINTRAY_API_KEY "https://api.bintray.com/content/palchaque/Otus-cpp/ipfilter/$TRAVIS_BUILD_NUMBER/ipfilter-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=trusty;deb_component=main;deb_architecture=amd64;publish=1"
+  - curl -T custom_allocator-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -upalchaque:$BINTRAY_API_KEY "https://api.bintray.com/content/palchaque/Otus-cpp/custom_allocator/$TRAVIS_BUILD_NUMBER/custom_allocator-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=trusty;deb_component=main;deb_architecture=amd64;publish=1"
   on:
     all_branches: true
