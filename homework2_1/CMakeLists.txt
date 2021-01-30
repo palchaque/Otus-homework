@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 add_definitions(-std=gnu++14)
 
-project(custom_allocator)
+project(custom_allocator VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
 add_executable(${PROJECT_NAME} "main.cpp" "pretty.h")
 
 set(CMAKE_CXX_STANDARD 14)
