@@ -122,7 +122,7 @@ int main()
     }
 
 
-    custom_list<int, custom_allocator<int, 10>, 10> list;
+    custom_list<int, custom_allocator<int, 10>, 10> list{};
 
     for (int i = 0; i<= 9; i++)
     {
