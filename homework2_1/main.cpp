@@ -2,23 +2,25 @@
 #include <string>
 #include <map>
 #include <memory>
-#include <stdint.h>
+#include <benchmark/benchmark.h>
 
 template<typename T, size_t max_size>
 class custom_allocator
 {
-
-
-private:
     size_t max_allocator_size = 0;
     size_t count = 0;
-    uint8_t data[sizeof(T) * max_size];
+    uint8_t *data;
 
 public:
+        using value_type = T;
+        using pointer = T*;
+        using const_pointer = const T*;
+        using reference = T&;
+        using const_reference = const T&;
 
-        custom_allocator() = default;
-        ~custom_allocator() = default;
-    
+    custom_allocator() = default;
+    ~custom_allocator() = default;
+
     template<typename U>
        struct rebind {
            using other = custom_allocator<U, max_size>;
@@ -32,6 +34,8 @@ public:
         T *allocate(std::size_t n)
         {
 
+           if(data==nullptr) data = new uint8_t[sizeof(T) * max_size];
+
            if(max_allocator_size == 0)
            {
                max_allocator_size = max_size;
@@ -43,14 +47,14 @@ public:
                    throw std::bad_alloc();
             }
 
-            return reinterpret_cast<T *>(&data[sizeof(T) * count++]);
+            return reinterpret_cast<T *>(&data[count++]);
 
        }
 
        void deallocate(T *pointer, std::size_t n)
        {
 
-           count-=n;
+
        }
 
        template<typename U, typename ...Args>
@@ -61,19 +65,11 @@ public:
        void destroy(T *p) {
                p->~T();
            }
-
-     using value_type = T;
-
-     using pointer = T*;
-     using const_pointer = const T*;
-     using reference = T&;
-    using const_reference = const T&;
 };
 
 template<typename T, typename A, std::size_t size>
 class custom_list
 {
-  private:
     std::size_t n = 0;
     A allocator;
     T values[size];
@@ -107,6 +103,10 @@ int getFactorial(const int &number)
     return factorial;
 }
 
+//#define RUN_BENCHMARK
+
+#ifndef RUN_BENCHMARK
+
 int main()
 {
 
@@ -121,7 +121,8 @@ int main()
     {
         std::cout<<mapIterator.first<<" "<<mapIterator.second<<std::endl;
     }
-    
+
+
     custom_list<int, custom_allocator<int, 10>, 10> list{};
 
     for (int i = 0; i<= 9; i++)
@@ -137,3 +138,82 @@ int main()
     return 0;
 
 }
+#endif
+
+
+#ifdef RUN_BENCHMARK
+
+static void insert_into_map(benchmark::State& state) {
+    for (auto _ : state)
+    {
+        auto myMap = std::map<int, int>{};
+
+        for (int i = 0; i<= 9; i++)
+        {
+          myMap.emplace(i, getFactorial(i));
+        }
+
+        for (auto mapIterator : myMap)
+        {
+            //std::cout<<mapIterator.first<<" "<<mapIterator.second<<std::endl;
+        }
+    }
+
+}
+
+static void insert_into_map_with_allocator(benchmark::State& state) {
+    for (auto _ : state)
+    {
+
+        auto myMap = std::map<int, int, std::less<int>, custom_allocator<std::pair<int, int>, 10>>{};
+
+        for (int i = 0; i<= 9; i++)
+        {
+          myMap.emplace(i, getFactorial(i));
+        }
+
+        for (auto mapIterator : myMap)
+        {
+            //std::cout<<mapIterator.first<<" "<<mapIterator.second<<std::endl;
+        }
+    }
+
+}
+
+static void insert_into_custom_container_with_default_allocator(benchmark::State& state) {
+    for (auto _ : state)
+    {
+        custom_list<int, std::allocator<int>, 10> list;
+
+        for (int i = 0; i<= 9; i++)
+        {
+            list.push_back(i);
+        }
+    }
+
+}
+
+static void insert_into_custom_container_with_custom_allocator(benchmark::State& state) {
+    for (auto _ : state)
+    {
+        custom_list<int, custom_allocator<int, 10>, 10> list;
+
+        for (int i = 0; i<= 9; i++)
+        {
+            list.push_back(i);
+        }
+    }
+
+}
+
+BENCHMARK(insert_into_map);
+
+BENCHMARK(insert_into_map_with_allocator);
+
+BENCHMARK(insert_into_custom_container_with_default_allocator);
+
+BENCHMARK(insert_into_custom_container_with_custom_allocator);
+
+BENCHMARK_MAIN();
+
+#endif
