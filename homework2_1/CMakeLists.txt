@@ -8,12 +8,13 @@ else()
     project(custom_allocator VERSION 0.0.4)
 endif()
 
-add_executable(${PROJECT_NAME} "main.cpp" "pretty.h")
+add_executable(${PROJECT_NAME} "main.cpp" "pretty.h" "custom_allocator.cpp" "custom_list.cpp")
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-target_link_libraries(custom_allocator)
+add_subdirectory(benchmark)
+target_link_libraries(custom_allocator benchmark::benchmark)
 
 set(CPACK_GENERATOR DEB)
 
