@@ -13,7 +13,7 @@ add_executable(${PROJECT_NAME} "main.cpp" "pretty.h" "custom_allocator.cpp" "cus
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_subdirectory(benchmark)
+include_directories(${PROJECT_SOURCE_DIR}/benchmark)
 target_link_libraries(custom_allocator benchmark::benchmark)
 
 set(CPACK_GENERATOR DEB)
