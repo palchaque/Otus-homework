@@ -6,12 +6,7 @@ before_script:
 - echo "deb http://archive.ubuntu.com/ubuntu xenial main universe" | sudo tee -a /etc/apt/sources.list
 - sudo apt-get update -qq
 script:
-- cd homework2_1/benchmark
-- ls
-- cmake .
-- cmake --build .
-- cmake --build . --target package
-- cd ..
+- cd homework2_1
 - cmake .
 - cmake --build .
 - cmake --build . --target package
