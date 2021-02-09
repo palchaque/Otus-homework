@@ -7,6 +7,7 @@ before_script:
 - sudo apt-get update -qq
 script:
 - cd homework2_1/benchmark
+- ls
 - cmake .
 - cmake --build .
 - cmake --build . --target package
