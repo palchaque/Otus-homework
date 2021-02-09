@@ -15,6 +15,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(benchmark REQUIRED)
 
+target_link_libraries(${PROJECT_NAME} PRIVATE benchmark::benchmark)
+
 set(CPACK_GENERATOR DEB)
 
 set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
