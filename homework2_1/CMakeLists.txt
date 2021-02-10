@@ -13,10 +13,6 @@ add_executable(${PROJECT_NAME} "main.cpp" "pretty.h" "custom_allocator.cpp" "cus
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(benchmark REQUIRED)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE benchmark::benchmark)
-
 set(CPACK_GENERATOR DEB)
 
 set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
