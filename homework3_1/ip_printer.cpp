@@ -53,18 +53,6 @@ void printTuple(std::tuple<Ts...> tup)
 }
 //
 
-//
-struct failure;
-
-template <class Container>
-struct has_begin {
-    template<typename T, typename N>
-    static decltype(std::declval<T, N>().begin()) detect(T);
-    static failure detect(...);
-    static constexpr bool value = !std::is_same<failure, decltype(detect(std::declval<Container>()))>;
-};
-//
-
 template <typename T>       struct is_vector:std::false_type{};
 template <typename... Args> struct is_vector<std::vector <Args...>>:std::true_type{};
 
