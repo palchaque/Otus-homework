@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-add_definitions(-std=gnu++20)
+add_definitions(-std=gnu++17)
 
 if ($ENV{TRAVIS_BUILD_NUMBER})
     project(print_ip VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
@@ -10,7 +10,7 @@ endif()
 
 add_executable(${PROJECT_NAME} "main.cpp" "ip_printer.cpp")
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CPACK_GENERATOR DEB)
