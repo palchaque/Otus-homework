@@ -5,6 +5,9 @@
 #include <list>
 #include <tuple>
 #include <typeinfo>
+#include <byte>
+#include <vector>
+
 //
 template<class T>
 struct is_numeric : std::false_type {};
