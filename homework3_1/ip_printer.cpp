@@ -4,6 +4,7 @@
 #include <array>
 #include <list>
 #include <tuple>
+#include <typeinfo>
 //
 template<class T>
 struct is_numeric : std::false_type {};
