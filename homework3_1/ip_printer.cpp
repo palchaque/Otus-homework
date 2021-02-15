@@ -59,7 +59,7 @@ struct has_begin {
     template<typename T, typename N>
     static decltype(std::declval<T, N>().begin()) detect(T);
     static failure detect(...);
-    static constexpr bool value = !std::is_same_v<failure, decltype(detect(std::declval<Container>()))>;
+    static constexpr bool value = !std::is_same_t<failure, decltype(detect(std::declval<Container>()))>;
 };
 //
 
