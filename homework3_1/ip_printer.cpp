@@ -33,7 +33,7 @@ constexpr bool is_same_type(T current_type, N next_tupe)
     return std::is_same<T, N>::value;
 }
 template <size_t I = 0, typename... Ts>
-constexpr void printTuple(std::tuple<Ts...> tup)
+void printTuple(std::tuple<Ts...> tup)
 {
     if
         constexpr(I == sizeof...(Ts))
