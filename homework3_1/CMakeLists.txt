@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
 
-add_definitions(-std=gnu++17)
-
 if ($ENV{TRAVIS_BUILD_NUMBER})
     project(print_ip VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
 else()
