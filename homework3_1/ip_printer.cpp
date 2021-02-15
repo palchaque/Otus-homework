@@ -59,9 +59,6 @@ template <typename... Args> struct is_vector<std::vector <Args...>>:std::true_ty
 template <typename T>       struct is_list:std::false_type{};
 template <typename... Args> struct is_list<std::list <Args...>>:std::true_type{};
 
-template< class T >
-struct is_container : has_begin<T>, is_not_string<T> {};
-
 template <typename T>       struct is_tuple:std::false_type{};
 template <typename... Args> struct is_tuple<std::tuple <Args...>>:std::true_type{};
 
