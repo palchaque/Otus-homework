@@ -5,7 +5,6 @@
 #include <list>
 #include <tuple>
 #include <typeinfo>
-#include <byte>
 #include <vector>
 
 //
