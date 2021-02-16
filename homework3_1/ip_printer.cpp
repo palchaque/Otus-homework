@@ -69,28 +69,7 @@ std::enable_if_t<std::is_same<T, char>::value> print_ip(T ip_input)
     std::cout<<std::to_integer<int>(byte_input)<<std::endl;
 }
     
-//long, short, int
-template<typename T>
-std::enable_if_t<is_numeric<T>::value> print_ip(T ip_input) {
 
-    int input_size = sizeof(T);
-    int bytes = 8;
-    const char ip_delimeter = '.';
-    int byte_shift = input_size * bytes;
-    
-    for (int i = 0; i < input_size; i++)
-    {
-        byte_shift -= bytes;
-        const T value_with_shift = ip_input>>byte_shift;
-        std::byte current_byte = static_cast<std::byte>(value_with_shift);
-        current_byte = current_byte & std::byte{0xFF};
-        std::cout<<std::to_integer<T>(current_byte);
-        if (i != input_size - 1) std::cout<<ip_delimeter;
-    }
-    
-    std::cout<<std::endl;
-
-}
 
 //std::string
 template<typename T>
@@ -116,6 +95,6 @@ std::enable_if_t<is_list<T>::value || is_vector<T>::value> print_ip(T ip_input) 
 template<typename T>
 std::enable_if_t<is_tuple<T>::value> print_ip(T ip_input) {
     
-    printTuple(ip_input);
+    //printTuple(ip_input);
     
 }
