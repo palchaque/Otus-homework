@@ -47,7 +47,6 @@ void printTuple(std::tuple<Ts...> tup)
         
         std::cout << std::get<I>(tup);
         if(I+1 != sizeof...(Ts)) std::cout<< ".";
-        if(!is_same_type(I, I+1)) throw std::bad_typeid();
         printTuple<I + 1>(tup);
     }
 }
