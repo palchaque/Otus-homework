@@ -32,3 +32,10 @@ deploy:
   - curl -T print_ip-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -upalchaque:$BINTRAY_API_KEY "https://api.bintray.com/content/palchaque/Otus-cpp/print_ip/$TRAVIS_BUILD_NUMBER/print_ip-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=trusty;deb_component=main;deb_architecture=amd64;publish=1"
   on:
     all_branches: true
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+  keep_history: true
+  on:
+    branch: main
