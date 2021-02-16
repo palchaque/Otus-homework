@@ -34,8 +34,6 @@ template <typename T, typename N>
 struct is_same_type: std::is_same<T, N>::value {};
 
 
-
-
 //
 
 template <typename T>       struct is_vector:std::false_type{};
@@ -99,9 +97,24 @@ std::enable_if_t<is_list<T>::value || is_vector<T>::value> print_ip(T ip_input) 
     std::cout<<std::endl;
 }
 
+template<std::size_t I = 0, typename... Tp>
+inline typename std::enable_if<I == sizeof...(Tp), void>::type
+  print_tuple(std::tuple<Tp...>& t)
+  { }
+
+template<std::size_t I = 0, typename... Tp>
+inline typename std::enable_if<I < sizeof...(Tp), void>::type
+  print_tuple(std::tuple<Tp...>& t)
+  {
+    std::cout << std::get<I>(t);
+    if(I+1 != sizeof...(Tp)) std::cout << ".";
+    print_tuple<I + 1, Tp...>(t);
+  }
+
 template<typename T>
 std::enable_if_t<is_tuple<T>::value> print_ip(T ip_input) {
 
-
+  print_tuple(ip_input);
+  std::cout<<std::endl;
 
 }
