@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/travis/build/palchaque/Otus-homework/homework3_1/ip_printer.cpp
+type_traits
+-
+iostream
+-
+cstddef
+-
+array
+-
+list
+-
+tuple
+-
+typeinfo
+-
+vector
+-
+
+/home/travis/build/palchaque/Otus-homework/homework3_1/main.cpp
+ip_printer.cpp
+/home/travis/build/palchaque/Otus-homework/homework3_1/ip_printer.cpp
+iostream
+-
+vector
+-
+list
+-
+
