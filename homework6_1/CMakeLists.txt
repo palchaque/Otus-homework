@@ -1,9 +1,15 @@
 cmake_minimum_required(VERSION 3.16)
 project(Otus_6)
 
+if ($ENV{TRAVIS_BUILD_NUMBER})
+    project(bulk VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
+else()
+    project(bulk VERSION 0.0.4)
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(Otus_6 main.cpp)
+add_executable(${PROJECT_NAME} main.cpp)
 
 set(CPACK_GENERATOR DEB)
 
