@@ -9,7 +9,7 @@ endif()
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp editor_model.cpp editor_model.h editor_image.cpp editor_image.h editor_controller.cpp editor_controller.h editor_view.cpp editor_view.h)
 
 set(CPACK_GENERATOR DEB)
 
