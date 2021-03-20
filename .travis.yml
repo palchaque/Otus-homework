@@ -21,7 +21,7 @@ before_script:
 - echo "deb http://archive.ubuntu.com/ubuntu groovy main universe" | sudo tee -a /etc/apt/sources.list
 - sudo apt-get update -qq
 script:
-- cd homework6_1
+- cd homework4_1
 - cmake .
 - cmake --build .
 - cmake --build . --target package
@@ -29,7 +29,7 @@ deploy:
   provider: script
   skip_cleanup: true
   script:
-  - curl -T print_ip-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -upalchaque:$BINTRAY_API_KEY "https://api.bintray.com/content/palchaque/Otus-cpp/bulk/$TRAVIS_BUILD_NUMBER/bulk-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=trusty;deb_component=main;deb_architecture=amd64;publish=1"
+  - curl -T print_ip-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -upalchaque:$BINTRAY_API_KEY "https://api.bintray.com/content/palchaque/Otus-cpp/editor/$TRAVIS_BUILD_NUMBER/editor-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=trusty;deb_component=main;deb_architecture=amd64;publish=1"
   on:
     all_branches: true
 deploy:

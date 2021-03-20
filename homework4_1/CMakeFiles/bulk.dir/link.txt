@@ -1,0 +1,1 @@
+/usr/bin/g++-9     CMakeFiles/bulk.dir/main.cpp.o CMakeFiles/bulk.dir/editor_model.cpp.o CMakeFiles/bulk.dir/editor_image.cpp.o CMakeFiles/bulk.dir/editor_controller.cpp.o CMakeFiles/bulk.dir/editor_view.cpp.o  -o bulk 
