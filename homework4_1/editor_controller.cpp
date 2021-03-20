@@ -3,7 +3,7 @@
 
 editor_controller::editor_controller(editor_model *model, editor_view *view) : model(model), view(view) {}
 
-editor_image editor_controller::createNewImage(int width, int height, std::string name, std::filesystem::path path)
+editor_image editor_controller::createNewImage(int width, int height, const std::string name, const std::string path)
 {
     editor_image newImage(name, path);
 
@@ -16,7 +16,16 @@ editor_image editor_controller::createNewImage(int width, int height, std::strin
 
 }
 
+editor_image editor_controller::importImage(const std::string path) {
 
+    editor_image *img;
+
+    return *img;
+}
+
+void editor_controller::removeImage(int index) {
+
+}
 
 editor_controller::~editor_controller() {
 

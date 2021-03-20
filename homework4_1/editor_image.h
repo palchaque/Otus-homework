@@ -3,13 +3,12 @@
 #define OTUS_HOMEWORK4_EDITOR_IMAGE_H
 
 #include <iostream>
-#include <filesystem>
 
 class editor_image {
 
     int width;
 public:
-    editor_image(const std::string &name, const std::filesystem::path &path);
+    editor_image(const std::string &name, const std::string &path);
 
     int getWidth() const;
 

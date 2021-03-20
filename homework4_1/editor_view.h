@@ -5,7 +5,7 @@
 #include "editor_image.h"
 
 class editor_view {
-    std::shared_ptr<editor_image> image;
+     editor_image * image;
 
 public:
     void showImage(editor_image *img);
