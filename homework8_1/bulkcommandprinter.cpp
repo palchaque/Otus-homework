@@ -1,8 +1,8 @@
-﻿#include "bulkcommandprinter.h"
+#include "bulkcommandprinter.h"
 
 bulkCommandPrinter::bulkCommandPrinter()
 {
-
+    fileName = "";
 }
 
 std::string bulkCommandPrinter::getOutputString(const tBulk &bulk)
@@ -21,6 +21,11 @@ std::string bulkCommandPrinter::getOutputString(const tBulk &bulk)
 
 }
 
+void bulkCommandPrinter::printOutputString(const tBulk &bulk)
+{
+    std::cout<<getOutputString(bulk)<<std::endl;
+}
+
 void bulkCommandPrinter::print(const int bulkSize)
 {
     std::string input = "";
@@ -30,8 +35,11 @@ void bulkCommandPrinter::print(const int bulkSize)
     int dynamicBlockCounter = 0;
 
     while(std::getline(std::cin, input))
-    {
+    {        
+        std::unique_lock<std::mutex> lock(fileSaveMutex);
+
         if(fileName.empty() && !input.empty()) fileName = std::to_string(std::time(0))+".log";
+        condition.notify_all();
 
         if (!isDynamicBlock)
         {
@@ -41,7 +49,7 @@ void bulkCommandPrinter::print(const int bulkSize)
             {
                 if (dynamicBlockCounter == 0 && !bulk.empty())
                 {
-                    std::cout<<getOutputString(bulk)<<std::endl;
+                    printOutputString(bulk);
                     bulk.clear();
                 }
                 dynamicBlockCounter++;
@@ -62,7 +70,7 @@ void bulkCommandPrinter::print(const int bulkSize)
             if(dynamicBlockCounter == 0) isDynamicBlock = false;
             if(dynamicBlockCounter == 0)
             {
-                std::cout<<getOutputString(bulk)<<std::endl;
+                printOutputString(bulk);
                 bulk.clear();
             }
             continue;
@@ -70,12 +78,15 @@ void bulkCommandPrinter::print(const int bulkSize)
 
         bulk.emplace(input);
         commandsQueue.emplace(input);
+        condition.notify_all();
 
         if (bulk.size() == bulkSize && !isDynamicBlock && dynamicBlockCounter==0)
         {
-            std::cout<<getOutputString(bulk)<<std::endl;
+            printOutputString(bulk);
             bulk.clear();
         }
+
+        lock.unlock();
 
     }
 
@@ -86,26 +97,26 @@ void bulkCommandPrinter::print(const int bulkSize)
 
 void bulkCommandPrinter::saveToFile()
 {
-
     while (runFileSavingThreads) {
 
-        if(fileName.empty()) continue;
-        const std::lock_guard<std::mutex> lock(fileSaveMutex);
-        if (!commandsQueue.empty())
+        std::unique_lock<std::mutex> lock(fileSaveMutex);
+
+        condition.wait(lock, [this]{return !commandsQueue.empty() && !fileName.empty();});
+
+        if(fileName.empty()) return;
+
+        std::ofstream outputFile;
+        outputFile.open(fileName, std::ios_base::app);
+        if(fs::is_empty(fs::path(fileName)))
         {
-            std::ofstream  outputFile;
-            outputFile.open(fileName, std::ios_base::app);
-            if(fs::is_empty(fs::path(fileName)))
-            {
-                outputFile<<"bulk: ";
-            }
-            outputFile<<commandsQueue.front()+", ";
-            outputFile.close();
-            commandsQueue.pop();
-
-            //std::cout<<std::this_thread::get_id()<<std::endl;
-
+            outputFile<<"bulk: ";
         }
+        outputFile<<commandsQueue.front()+", ";
+        outputFile.close();
+        commandsQueue.pop();
+
+        condition.notify_all();
+        lock.unlock();
     }
 
 }
@@ -118,12 +129,12 @@ void bulkCommandPrinter::start(const int bulkSize)
         return;
     }
 
+    log = std::thread(&bulkCommandPrinter::print, this, bulkSize);
+
     file1 = std::thread(&bulkCommandPrinter::saveToFile, this);
     file2 = std::thread(&bulkCommandPrinter::saveToFile, this);
-    file1.detach();
-    file2.detach();
-
-    log = std::thread(&bulkCommandPrinter::print, this, bulkSize);
+    file1.join();
+    file2.join();
     log.join();
 
     runFileSavingThreads = true;
