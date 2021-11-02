@@ -10,6 +10,7 @@
 #include <queue>
 #include <set>
 #include <filesystem>
+#include <condition_variable>
 
 using tBulk = std::multiset<std::string>;
 namespace fs = std::filesystem;
@@ -23,10 +24,12 @@ public:
 private:
     void print(const int bulkSize);
     void saveToFile();
+    void printOutputString(const tBulk&);
     std::string getOutputString(const tBulk&);
     std::thread file1;
     std::thread file2;
     std::thread log;
+    std::condition_variable condition;
     std::queue<std::string> commandsQueue;
     std::string fileName;
     std::mutex fileSaveMutex;
