@@ -21,11 +21,13 @@ public:
     bulkCommandPrinter();
     void start(const int bulkSize);
     void stop();
+    void parse(const int bulkSize);
 private:
-    void print(const int bulkSize);
+    void print();
     void saveToFile();
     void printOutputString(const tBulk&);
     std::string getOutputString(const tBulk&);
+    std::thread parser;
     std::thread file1;
     std::thread file2;
     std::thread log;

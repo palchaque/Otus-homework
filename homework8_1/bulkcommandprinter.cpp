@@ -1,4 +1,4 @@
-#include "bulkcommandprinter.h"
+﻿#include "bulkcommandprinter.h"
 
 bulkCommandPrinter::bulkCommandPrinter()
 {
@@ -26,71 +26,10 @@ void bulkCommandPrinter::printOutputString(const tBulk &bulk)
     std::cout<<getOutputString(bulk)<<std::endl;
 }
 
-void bulkCommandPrinter::print(const int bulkSize)
+void bulkCommandPrinter::print()
 {
-    std::string input = "";
 
-    bool isDynamicBlock;
-
-    int dynamicBlockCounter = 0;
-
-    while(std::getline(std::cin, input))
-    {        
-        std::unique_lock<std::mutex> lock(fileSaveMutex);
-
-        if(fileName.empty() && !input.empty()) fileName = std::to_string(std::time(0))+".log";
-        condition.notify_all();
-
-        if (!isDynamicBlock)
-        {
-            isDynamicBlock = input == "{";
-
-            if(isDynamicBlock)
-            {
-                if (dynamicBlockCounter == 0 && !bulk.empty())
-                {
-                    printOutputString(bulk);
-                    bulk.clear();
-                }
-                dynamicBlockCounter++;
-                continue;
-            }
-
-        }
-
-        if (input == "{")
-        {
-            dynamicBlockCounter++;
-            continue;
-        }
-
-        if(input == "}" && isDynamicBlock)
-        {
-            dynamicBlockCounter--;
-            if(dynamicBlockCounter == 0) isDynamicBlock = false;
-            if(dynamicBlockCounter == 0)
-            {
-                printOutputString(bulk);
-                bulk.clear();
-            }
-            continue;
-        }
-
-        bulk.emplace(input);
-        commandsQueue.emplace(input);
-        condition.notify_all();
-
-        if (bulk.size() == bulkSize && !isDynamicBlock && dynamicBlockCounter==0)
-        {
-            printOutputString(bulk);
-            bulk.clear();
-        }
-
-        lock.unlock();
-
-    }
-
-    runFileSavingThreads = false;
+   printOutputString(bulk);
 
 }
 
@@ -121,6 +60,65 @@ void bulkCommandPrinter::saveToFile()
 
 }
 
+void bulkCommandPrinter::parse(const int bulkSize)
+{
+    std::string input = "";
+
+    bool isDynamicBlock;
+
+    int dynamicBlockCounter = 0;
+
+    while(std::getline(std::cin, input))
+    {
+        std::unique_lock<std::mutex> lock(fileSaveMutex);
+
+        if(fileName.empty() && !input.empty()) fileName = std::to_string(std::time(0))+".log";
+        condition.notify_all();
+
+        if (!isDynamicBlock)
+        {
+            isDynamicBlock = input == "{";
+
+            if(isDynamicBlock)
+            {
+                if (dynamicBlockCounter == 0 && !bulk.empty())
+                {
+                    continue;
+                    bulk.clear();
+                }
+                dynamicBlockCounter++;
+                continue;
+            }
+
+        }
+
+        if (input == "{")
+        {
+            dynamicBlockCounter++;
+            continue;
+        }
+
+        if(input == "}" && isDynamicBlock)
+        {
+            dynamicBlockCounter--;
+            if(dynamicBlockCounter == 0) isDynamicBlock = false;
+            if(dynamicBlockCounter == 0)
+            {
+                continue;
+                bulk.clear();
+            }
+            continue;
+        }
+
+        bulk.emplace(input);
+        commandsQueue.emplace(input);
+        condition.notify_all();
+
+        lock.unlock();
+    }
+
+}
+
 void bulkCommandPrinter::start(const int bulkSize)
 {
     if(bulkSize == 0)
@@ -129,10 +127,14 @@ void bulkCommandPrinter::start(const int bulkSize)
         return;
     }
 
-    log = std::thread(&bulkCommandPrinter::print, this, bulkSize);
+    parser = std::thread(&bulkCommandPrinter::parse, this, bulkSize);
+
+    log = std::thread(&bulkCommandPrinter::print, this);
 
     file1 = std::thread(&bulkCommandPrinter::saveToFile, this);
     file2 = std::thread(&bulkCommandPrinter::saveToFile, this);
+
+    parser.join();
     file1.join();
     file2.join();
     log.join();
